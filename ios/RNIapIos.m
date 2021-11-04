@@ -292,6 +292,7 @@ RCT_EXPORT_METHOD(buyPromotedProduct:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject) {
     if (promotedPayment) {
         NSLog(@"\n\n\n  ***  buy promoted product. \n\n.");
+        [self addPromiseForKey:@"promo-product" resolve:resolve reject:reject];
         [[SKPaymentQueue defaultQueue] addPayment:promotedPayment];
     } else {
         reject(@"E_DEVELOPER_ERROR", @"Invalid product ID.", nil);
@@ -510,7 +511,12 @@ RCT_EXPORT_METHOD(presentCodeRedemptionSheet:(RCTPromiseResolveBlock)resolve
         pendingTransactionWithAutoFinish = false;
     }
     [self getPurchaseData:transaction withBlock:^(NSDictionary *purchase) {
-        [self resolvePromisesForKey:transaction.payment.productIdentifier value:purchase];
+
+        if([transaction.payment.productIdentifier isEqual:promotedProduct.productIdentifier]){
+          [self resolvePromisesForKey:@"promo-product" value:purchase];
+        }else{
+          [self resolvePromisesForKey:transaction.payment.productIdentifier value:purchase];
+        }
 
         // additionally send event
         if (self->hasListeners) {

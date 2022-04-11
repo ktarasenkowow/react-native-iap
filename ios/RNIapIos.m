@@ -25,6 +25,7 @@
     }
     myQueue = dispatch_queue_create("reject", DISPATCH_QUEUE_SERIAL);
     validProducts = [NSMutableArray array];
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     return self;
 }
 
@@ -112,7 +113,6 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(canMakePayments:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject) {
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     BOOL canMakePayments = [SKPaymentQueue canMakePayments];
     resolve(@(canMakePayments));
 }

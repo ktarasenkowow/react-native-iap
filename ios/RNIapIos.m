@@ -512,7 +512,7 @@ RCT_EXPORT_METHOD(presentCodeRedemptionSheet:(RCTPromiseResolveBlock)resolve
     }
     [self getPurchaseData:transaction withBlock:^(NSDictionary *purchase) {
 
-        if([transaction.payment.productIdentifier isEqual:promotedProduct.productIdentifier]){
+        if(promotedProduct && [transaction.payment.productIdentifier isEqual:promotedProduct.productIdentifier]){
           [self resolvePromisesForKey:@"promo-product" value:purchase];
         }else{
           [self resolvePromisesForKey:transaction.payment.productIdentifier value:purchase];
